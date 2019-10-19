@@ -34,22 +34,19 @@ $("#title").change(function(){
 
 
 //Register for Activities
-let subTotal = 0;
-let totalCost= $("<label>Total: $"0"</label>");
+let totalCost= $("<label>Total: $0</label>");
 $(".activities").append($(totalCost));
-
+let subTotal = 0;
 $(".activities").change(function(e){
-  var clicked = e.target;
   let dataCost = e.target.getAttribute("data-cost").slice(1);
   let costInteger = parseInt(dataCost);
-  if($("clicked:checked")){
-    subTotal += costInteger
+  if($(e.target).prop('checked')){
+    subTotal += costInteger;
   } else{
-    subTotal-costInteger
+    subTotal -= costInteger;
   }
-totalCost.append(subTotal);
-})
-
+  totalCost.text("Total: $" + subTotal);
+});
 
 //Payment Info
 
