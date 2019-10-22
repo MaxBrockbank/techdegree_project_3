@@ -38,7 +38,8 @@ let totalCost= $("<label>Total: $0</label>");
 $(".activities").append($(totalCost));
 let subTotal = 0;
 $(".activities").change(function(e){
-  let dataCost = e.target.getAttribute("data-cost").slice(1);
+  //total cost//
+  let dataCost = $(e.target).data("cost").slice(1);
   let costInteger = parseInt(dataCost);
   if($(e.target).prop('checked')){
     subTotal += costInteger;
@@ -46,11 +47,35 @@ $(".activities").change(function(e){
     subTotal -= costInteger;
   }
   totalCost.text("Total: $" + subTotal);
+  //conflicting times//
+  $('.activities input').each(function(){
+    if($(e.target).data('day-and-time') === $(this).data('day-and-time') && e.target!==this && $(e.target).prop('checked')){
+        $(this).prop('disabled', true);
+      } else {
+        $(this).prop('disabled', false);
+    }
+  })
 });
-
 //Payment Info
+$("#payment option:contains(Select Payment Method)").toggle();
+$("#payment option").eq(1).attr('selected', true);
+$("#payment").change(function(e){
+  function paymentOption(id){
+    $("#payment").parent().children("div").hide();
+    $(id).show();
+  }
+  if($("#payment").val() === "Credit Card"){
+    paymentOption("#credit-card");
+  } else if($("#payment").val() === "PayPal"){
+    paymentOption("#paypal");
+  } else if($("#payment").val() === "Bitcoin"){
+    paymentOption("#bitcoin");
+  }
+})
+
 
 //Form Validation
+
 
 //Validation Messages
 
