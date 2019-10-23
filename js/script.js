@@ -1,5 +1,11 @@
+//Global variables
+const $name = $("#name");
+const $email = $("#mail");
+const $ccNum = $("#cc-num");
+const $ccZip = $("#zip");
+const $ccCVV = $("#cvv");
 //Set focus on Name input
-$("#name").focus();
+$name.focus();
 
 //Job Role Section//
 $("#other-title").hide();
@@ -51,14 +57,27 @@ $(".activities").change(function(e){
   $('.activities input').each(function(){
     if($(e.target).data('day-and-time') === $(this).data('day-and-time') && e.target!==this && $(e.target).prop('checked')){
         $(this).prop('disabled', true);
-      } else {
+      } else if($(e.target).prop('checked')===false){
         $(this).prop('disabled', false);
     }
   })
+
+  //error message to make a selection
+
+  if($(".activities input:checkbox:checked").length >= 1){
+  $("#nah").remove();
+  } else if($(".activities input:checkbox:checked").length < 1) {
+    $(".activities legend").append("<label id='nah' class = 'error'>Activity Selection Required<label>")
+  }
+
 });
+
+
 //Payment Info
 $("#payment option:contains(Select Payment Method)").toggle();
 $("#payment option").eq(1).attr('selected', true);
+$("#paypal").hide();
+$("#bitcoin").hide();
 $("#payment").change(function(e){
   function paymentOption(id){
     $("#payment").parent().children("div").hide();
@@ -76,7 +95,45 @@ $("#payment").change(function(e){
 
 //Form Validation
 
+//validators//
+  //Name Regex from https://andrewwoods.net/blog/2018/name-validation-regex/
+  const nameValid = /^[A-Za-z]+([\ A-Za-z]+)*/;
+  // Email Regex from https://www.emailregex.com
+  const emailValid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // Credit Card Regex from https://www.regular-expressions.info/creditcard.html
+  const ccValid = /^\b\d{13,16}\b$/;
 
-//Validation Messages
+  const zipValid = /^\d{5}$/;
+
+  const cvvValid = /^\d{3,4}$/;
+
+//form validation function
+  function inputValidation (element, regex, message, id){
+    let $id ="#"+ id;
+    if(regex.test($(element).val())){
+      $($id).remove();
+    } else if(regex.test($(element).val()) === false && element.prev().attr('id')!== id) {
+      $(element).before("<label id = "+id+" class = 'error'></label>");
+      $(element).prev().text(message);
+    }
+  }
+// validators passed into the form validation function
+  $name.on('input', function(){
+    inputValidation($name, nameValid, "Name Required", "nameError")
+  });
+  $email.on('input', function(){
+    inputValidation($email, emailValid, "Valid E-mail Address Required", "emailError")
+  });
+  $ccNum.on('input', function(){
+    inputValidation($ccNum, ccValid, "Credit Card Number Must Be 13-16 Characters", "ccnError")
+  });
+  $ccZip.on('input', function(){
+    inputValidation($ccZip, zipValid, "Zip Code Required", "zipError")
+  })
+  $ccCVV.on('input', function(){
+    inputValidation($ccCVV, cvvValid, "CVV Required", "cvvError")
+  })
+//Validation Messages/
+
 
 //Extra Credit
