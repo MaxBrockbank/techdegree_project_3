@@ -176,6 +176,10 @@ option {
   color: red;
 }
 
+.border-error{
+  border-color: red;
+}
+
 
 /* =================================
   Media Queries
